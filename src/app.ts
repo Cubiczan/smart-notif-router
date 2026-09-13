@@ -1,5 +1,6 @@
 import express from 'express';
 import cors from 'cors';
+import helmet from 'helmet';
 import swaggerUi from 'swagger-ui-express';
 import swaggerJSDoc from 'swagger-jsdoc';
 import { config } from './config';
@@ -12,6 +13,27 @@ import healthRouter from './routes/health';
 const app = express();
 
 // ── Middleware ──
+// Helmet first so every response (API, Swagger UI, errors) emits baseline
+// browser security headers (CSP, X-Content-Type-Options, X-Frame-Options,
+// Referrer-Policy, HSTS, etc.). Fixes Aikido High SAST: Express is not
+// emitting security headers.
+app.use(
+  helmet({
+    contentSecurityPolicy: {
+      useDefaults: true,
+      directives: {
+        // swagger-ui-express inlines scripts; keep docs usable.
+        'script-src': ["'self'", "'unsafe-inline'"],
+        // Helmet's default upgrade-insecure-requests breaks local HTTP
+        // (dashboard at :3000 talking to this API, Swagger UI).
+        'upgrade-insecure-requests': null,
+      },
+    },
+    // The Next.js dashboard calls this API cross-origin.
+    crossOriginResourcePolicy: { policy: 'cross-origin' },
+  }),
+);
+
 // Restrict CORS to known origins. Configure via CORS_ORIGINS (comma-separated);
 // defaults to the local dev server. An explicit allowlist replaces the previous
 // wide-open `cors()` default.
