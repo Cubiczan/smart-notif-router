@@ -52,6 +52,20 @@ const authHeaders = {
   Authorization: `Bearer ${API_KEY}`,
 };
 
+test('API responses emit Helmet security headers', async () => {
+  const res = await fetch(`${baseUrl}/api/health`);
+  assert.equal(res.status, 200);
+  assert.equal(res.headers.get('x-content-type-options'), 'nosniff');
+  assert.equal(res.headers.get('x-frame-options'), 'SAMEORIGIN');
+  assert.equal(res.headers.get('referrer-policy'), 'no-referrer');
+  assert.equal(res.headers.get('x-dns-prefetch-control'), 'off');
+  assert.equal(res.headers.get('cross-origin-resource-policy'), 'cross-origin');
+  const csp = res.headers.get('content-security-policy');
+  assert.ok(csp, 'Content-Security-Policy must be set');
+  assert.match(csp, /default-src 'self'/);
+  assert.equal(res.headers.get('x-powered-by'), null);
+});
+
 test('POST /api/notifications without auth is rejected (401)', async () => {
   const res = await fetch(`${baseUrl}/api/notifications`, {
     method: 'POST',
