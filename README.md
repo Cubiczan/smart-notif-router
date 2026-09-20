@@ -313,3 +313,15 @@ smart-notif-router/
 ## 📄 License
 
 MIT License — see [LICENSE](LICENSE) for details.
+
+## Propagation decisions (SecOps/Gov wave C)
+
+### Row 17 — ReBAC gateway: REVERSED (verified against current state)
+
+The entire authentication surface is one static shared secret: `requireAuth` in src/middleware/auth.ts reads a single `API_KEY` env var at module load, fails closed with 503 when unset, and answers 401 to any other Bearer token. There are no users, roles, or tenants — one shared token equals a subject population of one, and a ReBAC gateway would re-express a constant as a relation.
+
+**Revisit trigger:** per-user identities or role-differentiated notification permissions appear. Then adopt the canonical ReBAC gateway; the fail-closed posture of the current middleware is already the shape the canonical package expects.
+
+### Rows 18 / 19 — degradation ladder and protocol health probes: adoption identified, NOT yet implemented
+
+Both rows apply (Express route wrappers around live notification-delivery calls are the canonical surface). Recorded as the open adoption work for this repo in the wave-C report; not silently claimed as done.
