@@ -257,7 +257,7 @@ smart-notif-router/
 │   │   └── error-handler.ts
 │   ├── app.ts                    # Express app setup
 │   └── index.ts                  # Entry point
-├── dashboard/                    # Next.js 15 dashboard
+├── dashboard/                    # Next.js 16 dashboard
 │   └── src/app/
 │       ├── layout.tsx
 │       └── page.tsx              # Dashboard UI
@@ -303,7 +303,7 @@ smart-notif-router/
 | **Email Delivery** | Wooxy API v3.0 |
 | **Database** | SQLite (better-sqlite3) |
 | **Queue** | BullMQ + Redis 7 |
-| **Dashboard** | Next.js 15 + Tailwind CSS |
+| **Dashboard** | Next.js 16 + Tailwind CSS |
 | **API Docs** | Swagger/OpenAPI 3.0 (swagger-jsdoc + swagger-ui-express) |
 | **Containers** | Docker + Docker Compose |
 | **Testing** | Postman Collection |
